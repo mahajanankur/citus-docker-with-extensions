@@ -1,3 +1,1 @@
 # membership-manager
-
-TODO: Document
