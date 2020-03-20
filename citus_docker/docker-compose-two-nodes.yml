@@ -1,0 +1,61 @@
+version: '2.1'
+
+services:
+  master:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_master"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: 'citus:9.2.2'
+    # image: 'cr.searchunify.com/custom-images/citus:9.2.2'
+    ports: ["${MASTER_EXTERNAL_PORT:-5432}:5432"]
+    # environment:
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    #   - POSTGRES_DB=postgres
+    #   - PGUSER=postgres
+    #   - PGPASSWORD=postgres
+    #   - PGDB=postgres
+    environment: &AUTH
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDB: postgres
+    labels: ['com.citusdata.role=Master']
+    volumes:
+      - pgdata_master:/var/lib/postgresql/data
+
+  worker:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: 'citus:9.2.2'
+    # image: 'cr.searchunify.com/custom-images/citus:9.2.2'
+    # environment:
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    #   - POSTGRES_DB=postgres
+    environment: *AUTH
+    labels: ['com.citusdata.role=Worker']
+    depends_on: { manager: { condition: service_healthy } }
+    volumes:
+      - pgdata_worker:/var/lib/postgresql/data
+
+  manager:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
+    # image: 'citusdata/membership-manager:0.2.0'
+    image: 'cr.searchunify.com/custom-images/citus-manager:0.2.0'
+    volumes: ['/var/run/docker.sock:/var/run/docker.sock']
+    # environment:
+    #   - CITUS_HOST=master
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    #   - POSTGRES_DB=postgres
+    environment: *AUTH
+    depends_on: { master: { condition: service_healthy } }
+
+volumes:
+  pgdata_master:
+  pgdata_worker:

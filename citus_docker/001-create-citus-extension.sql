@@ -8,10 +8,9 @@ UPDATE pg_dist_node_metadata SET metadata=jsonb_insert(metadata, '{docker}', 'tr
 -- extensions:
 CREATE EXTENSION IF NOT EXISTS "hll";
 CREATE EXTENSION IF NOT EXISTS "topn";
-
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Partman
-CREATE SCHEMA partman;
-CREATE EXTENSION pg_partman SCHEMA partman;
--- CREATE EXTENSION IF NOT EXISTS "pg_partman" SCHEMA partman;
+-- CREATE SCHEMA partman;
+-- CREATE EXTENSION pg_partman SCHEMA partman;
 
 COMMIT;

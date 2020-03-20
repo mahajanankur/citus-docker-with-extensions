@@ -9,5 +9,4 @@ if [ -n "${DISABLE_STATS_COLLECTION+set}" ]; then
 
   echo 'citus.enable_statistics_collection=off' >> "${PGDATA}/postgresql.conf"
   pg_ctl -D "${PGDATA}" reload -s
-  # pg_ctl -D "${PGDATA}" restart -s
 fi
