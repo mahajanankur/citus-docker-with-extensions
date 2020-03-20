@@ -44,7 +44,7 @@ services:
   manager:
     container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
     build:
-      context: ./membership-manager
+      context: ../membership-manager
       dockerfile: Dockerfile
     image: 'citus-manager:0.2.0'
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
