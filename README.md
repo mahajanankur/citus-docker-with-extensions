@@ -19,3 +19,7 @@ Citus docker with default 3 node cluster with hll, topn and partman pre-build ex
 # Stop citus cluster.
 
 `docker-compose -p citus`
+
+# To import default schema
+
+`docker container exec -i citus_master psql -U postgres < ddl.sql`
